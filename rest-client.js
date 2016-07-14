@@ -137,12 +137,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        if (xhr.status == 200 || xhr.status == 201 || xhr.status == 204) {
 	                            _this.emit('success', xhr);
 	
-	                            var responseContentType = xhr.getResponseHeader('Content-Type').split(';')[0];
-	                            var _mime = _this._opts[responseContentType];
-	                            var res = xhr.responseText;
-	                            if (_mime && _mime.decode) res = _mime.decode(res);
+	                            var contentTypeHeader = xhr.getResponseHeader('Content-Type');
 	
-	                            resolve(res);
+	                            if (contentTypeHeader === null) {
+	                                var res = xhr.responseText;
+	                                resolve(res);
+	                            } else {
+	                                var responseContentType = xhr.getResponseHeader('Content-Type').split(';')[0];
+	                                var _mime = _this._opts[responseContentType];
+	                                var _res = xhr.responseText;
+	                                if (_mime && _mime.decode) _res = _mime.decode(_res);
+	
+	                                resolve(_res);
+	                            }
 	                        } else {
 	                            _this.emit('error', xhr);
 	                            reject(xhr);
