@@ -3,9 +3,8 @@ import Events from 'minivents'
 function encodeUrl(data) {
     let res = '';
     for (let k in data) {
-        if (typeof data[k] === 'object' && data[k].noEncode) {
+        if (typeof data[k] === 'object' && data[k].noEncode)
             res += k + '=' + data[k].value + '&';
-        }
         else
             res += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
     }
