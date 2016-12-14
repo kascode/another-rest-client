@@ -1,7 +1,7 @@
 var should = require('chai').should();
 var sinon = require('sinon');
 
-var RestClient = require('../rest-client');
+var RestClient = require('../rest-client.min');
 
 var host = 'http://example.com';
 
@@ -155,5 +155,14 @@ describe('resource', () => {
             api.cookies.get({fresh: true});
             req.url.should.be.equal(host + '/cookies?fresh=true');
         });
+
+        it('should not encode query args if arg is object with noEncode === true', () => {
+            var req;
+            var testString = "!@#$%^&*()_+{}[],.abc";
+            xhr.onCreate = r => req = r;
+
+            api.cookies.get({fresh: {value: testString, noEncode: true}});
+            req.url.should.be.equal(host + '/cookies?fresh=' + testString);
+        })
     });
 });
