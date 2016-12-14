@@ -60,6 +60,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	
 	var _minivents = __webpack_require__(1);
 	
 	var _minivents2 = _interopRequireDefault(_minivents);
@@ -71,8 +73,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	function encodeUrl(data) {
 	    var res = '';
 	    for (var k in data) {
-	        res += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
-	    }return res.substr(0, res.length - 1);
+	        if (_typeof(data[k]) === 'object' && data[k].noEncode) {
+	            res += k + '=' + data[k].value + '&';
+	        } else res += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
+	    }
+	    return res.substr(0, res.length - 1);
 	}
 	
 	var RestClient = function () {
@@ -95,7 +100,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(RestClient, [{
 	        key: 'conf',
 	        value: function conf() {
-	            var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	
 	            var currentOptions = this._opts || {
 	                trailing: '',
@@ -114,8 +119,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _request(method, url) {
 	            var _this = this;
 	
-	            var data = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-	            var contentType = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+	            var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+	            var contentType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 	
 	            if (url.indexOf('?') == -1) url += this._opts.trailing;else url = url.replace('?', this._opts.trailing + '?');
 	
@@ -186,7 +191,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	
 	    self.res = function (resources) {
-	        var shortcut = arguments.length <= 1 || arguments[1] === undefined ? client._opts.shortcut : arguments[1];
+	        var shortcut = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : client._opts.shortcut;
 	
 	        var makeRes = function makeRes(resName) {
 	            if (resName in self._resources) return self._resources[resName];
@@ -230,19 +235,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	
 	    self.post = function (data) {
-	        var contentType = arguments.length <= 1 || arguments[1] === undefined ? client._opts.contentType : arguments[1];
+	        var contentType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : client._opts.contentType;
 	
 	        return client._request('POST', self.url(), data, contentType);
 	    };
 	
 	    self.put = function (data) {
-	        var contentType = arguments.length <= 1 || arguments[1] === undefined ? client._opts.contentType : arguments[1];
+	        var contentType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : client._opts.contentType;
 	
 	        return client._request('PUT', self.url(), data, contentType);
 	    };
 	
 	    self.patch = function (data) {
-	        var contentType = arguments.length <= 1 || arguments[1] === undefined ? client._opts.contentType : arguments[1];
+	        var contentType = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : client._opts.contentType;
 	
 	        return client._request('PATCH', self.url(), data, contentType);
 	    };
