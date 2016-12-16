@@ -87,6 +87,7 @@ class RestClient {
             };
         });
         xhr.send(data);
+        p.xhr = xhr;
         return p;
     }
 }
