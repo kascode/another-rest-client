@@ -161,6 +161,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                };
 	            });
 	            xhr.send(data);
+	            p.xhr = xhr;
 	            return p;
 	        }
 	    }]);
