@@ -105,7 +105,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	                shortcut: true,
 	                contentType: 'application/json',
 	                'application/x-www-form-urlencoded': { encode: encodeUrl },
-	                'application/json': { encode: JSON.stringify, decode: JSON.parse }
+	                'application/json': { encode: JSON.stringify, decode: function decode(json) {
+	                        var ret = "";
+	                        try {
+	                            ret = JSON.parse(json);
+	                        } catch (e) {
+	                            console.error(e);
+	                            console.log(json);
+	                            if (json.length > 0) {
+	                                if (json[0] === '[') return [];else if (json[0] === '{') return {};
+	                            }
+	                        }
+	                        return ret;
+	                    }
+	                }
 	            };
 	
 	            this._opts = _extends(currentOptions, options);

@@ -25,14 +25,34 @@ class RestClient {
         // At least this parameters are symmetric :D
         resource(this, undefined, '', undefined, this);
     }
-
+	
+	
     conf(options={}) {
         let currentOptions = this._opts || {
             trailing: '',
             shortcut: true,
             contentType: 'application/json',
             'application/x-www-form-urlencoded': {encode: encodeUrl},
-            'application/json': {encode: JSON.stringify, decode: JSON.parse}
+            'application/json': {encode: JSON.stringify, decode: function(json) {
+					var ret = "";
+					try
+					{
+						ret = JSON.parse(json);
+					}
+					catch (e) {
+						console.error(e);
+						console.log(json);
+						if (json.length > 0)
+						{
+							if (json[0] === '[')
+								return [];
+							else if (json[0] === '{')
+								return {};
+						}
+					}
+					return ret;
+				}
+			}
         };
 
         this._opts = Object.assign(currentOptions, options);
