@@ -144,14 +144,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                xhr.setRequestHeader('Content-Type', contentType);
 	            }
 	
-	            this.emit('request', xhr);
+	            var parameters = { method: method, data: data, url: url, contentType: contentType };
+	            this.emit('request', xhr, parameters);
 	
 	            var p = new Promise(function (resolve, reject) {
 	                xhr.onreadystatechange = function () {
 	                    if (xhr.readyState == 4) {
-	                        _this.emit('response', xhr);
+	                        _this.emit('response', xhr, parameters);
 	                        if (xhr.status == 200 || xhr.status == 201 || xhr.status == 204) {
-	                            _this.emit('success', xhr);
+	                            _this.emit('success', xhr, parameters);
 	
 	                            var contentTypeHeader = xhr.getResponseHeader('Content-Type');
 	
@@ -167,7 +168,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                resolve(_res);
 	                            }
 	                        } else {
-	                            _this.emit('error', xhr);
+	                            _this.emit('error', xhr, parameters);
 	                            reject(xhr);
 	                        }
 	                    }
