@@ -76,14 +76,15 @@ class RestClient {
             xhr.setRequestHeader('Content-Type', contentType);
         }
 
-        this.emit('request', xhr, {method: method, data:data, url: url, contentType: contentType});
+		let parameters = {method: method, data:data, url: url, contentType: contentType};
+        this.emit('request', xhr, parameters);
 
         let p = new Promise((resolve, reject) => {
             xhr.onreadystatechange = () => {
                 if (xhr.readyState == 4) {
-                    this.emit('response', xhr);
+                    this.emit('response', xhr, parameters);
                     if (xhr.status == 200 || xhr.status == 201 || xhr.status == 204) {
-                        this.emit('success', xhr);
+                        this.emit('success', xhr, parameters);
 
                         const contentTypeHeader = xhr.getResponseHeader('Content-Type');
 
@@ -100,7 +101,7 @@ class RestClient {
                             resolve(res);
                         }
                     } else {
-                        this.emit('error', xhr);
+                        this.emit('error', xhr, parameters);
                         reject(xhr);
                     }
                 }
