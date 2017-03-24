@@ -76,7 +76,7 @@ class RestClient {
             xhr.setRequestHeader('Content-Type', contentType);
         }
 
-        this.emit('request', xhr);
+        this.emit('request', xhr, {method: method, data:data, url: url, contentType: contentType});
 
         let p = new Promise((resolve, reject) => {
             xhr.onreadystatechange = () => {
